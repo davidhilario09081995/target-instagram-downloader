@@ -1,0 +1,13 @@
+{
+  "name": "target-instagram-downloader",
+  "version": "1.0.0",
+  "description": "Baixador de posts do Instagram (imagem, vídeo e carrossel) - Target Mídia Digital",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
