@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baixar Instagram | Target Mídia Digital</title>
+  <meta name="description" content="Baixe fotos, vídeos e carrosséis do Instagram direto pelo link.">
+  <link rel="icon" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand: #004AAD;
+      --brand-dark: #00357D;
+      --brand-soft: #E8F0FB;
+      --ink: #0A0A0A;
+      --muted: #5B6472;
+      --line: #E3E7ED;
+      --bg: #F6F8FB;
+      --card: #FFFFFF;
+      --danger: #C62828;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 16px; }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 84px; }
+    header img { height: 56px; width: auto; display: block; }
+    @media (max-width: 600px) {
+      header .wrap { height: 72px; }
+      header img { height: 46px; }
+    }
+    header span { font-size: 13px; font-weight: 600; color: var(--muted); }
+
+    .hero {
+      background: linear-gradient(160deg, var(--brand) 0%, var(--brand-dark) 100%);
+      color: #fff;
+      padding: 56px 0 88px;
+      text-align: center;
+    }
+    .hero h1 { margin: 0 0 10px; font-size: clamp(26px, 5vw, 40px); font-weight: 800; letter-spacing: -0.5px; }
+    .hero p { margin: 0 auto; max-width: 520px; font-size: 16px; opacity: .88; line-height: 1.5; }
+    .types { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+    .types span {
+      font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px;
+      background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+    }
+
+    main { flex: 1; }
+    .search {
+      margin: -52px auto 0;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 32px rgba(0, 40, 100, .14);
+      padding: 18px;
+      display: flex;
+      gap: 10px;
+    }
+    .field { flex: 1; display: flex; align-items: center; border: 2px solid var(--line); border-radius: 10px; transition: border-color .15s; min-width: 0; }
+    .field:focus-within { border-color: var(--brand); }
+    .field input {
+      flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
+      font: inherit; font-size: 15px; padding: 14px; color: var(--ink);
+    }
+    .paste {
+      border: 0; background: none; color: var(--brand); font: inherit; font-size: 13px; font-weight: 700;
+      padding: 0 14px; cursor: pointer; white-space: nowrap;
+    }
+    .btn {
+      border: 0; border-radius: 10px; cursor: pointer; font: inherit; font-weight: 700;
+      background: var(--brand); color: #fff; padding: 0 26px; font-size: 15px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .15s, transform .05s; text-decoration: none; white-space: nowrap;
+    }
+    .btn:hover { background: var(--brand-dark); }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: .6; cursor: default; }
+    .btn svg { width: 18px; height: 18px; }
+
+    .status { text-align: center; margin: 28px 0; color: var(--muted); font-weight: 500; }
+    .status.error {
+      color: var(--danger); background: #FDECEC; border: 1px solid #F5C6C6;
+      border-radius: 10px; padding: 14px 16px; text-align: left;
+    }
+    .spinner {
+      width: 22px; height: 22px; border: 3px solid var(--brand-soft); border-top-color: var(--brand);
+      border-radius: 50%; animation: spin .8s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .result { margin: 28px 0 48px; }
+    .result-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .result-head h2 { margin: 0; font-size: 18px; font-weight: 700; }
+    .result-head small { display: block; color: var(--muted); font-size: 13px; font-weight: 500; margin-top: 2px; }
+    .result-head .btn { height: 44px; }
+    .result-head .btn[hidden] { display: none; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .grid.single { grid-template-columns: minmax(0, 360px); }
+    .item {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .media { position: relative; aspect-ratio: 4 / 5; background: #EEF1F5; }
+    .media img, .media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .badge {
+      position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.65); color: #fff;
+      font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; letter-spacing: .3px;
+    }
+    .item .btn { margin: 12px; height: 42px; font-size: 14px; }
+
+    footer { border-top: 1px solid var(--line); background: #fff; }
+    footer .wrap { padding: 20px 16px; font-size: 12px; color: var(--muted); text-align: center; line-height: 1.6; }
+
+    @media (max-width: 600px) {
+      .hero { padding: 40px 0 80px; }
+      .search { flex-direction: column; padding: 14px; }
+      .search > .btn { height: 50px; }
+      .result-head .btn { width: 100%; }
+      .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .grid.single { grid-template-columns: 1fr; }
+      .item .btn { margin: 8px; font-size: 13px; padding: 0 10px; }
+    }
+    @media (min-width: 601px) { .search > .btn { min-height: 52px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <img src="logo.png" alt="Target Mídia Digital">
+      <span>Downloader</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <h1>Baixe posts do Instagram</h1>
+        <p>Cole o link do post e baixe fotos, vídeos e todas as imagens de um carrossel em alta qualidade.</p>
+        <div class="types"><span>Imagem</span><span>Vídeo / Reel</span><span>Carrossel</span></div>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <form class="search" id="form" autocomplete="off">
+        <div class="field">
+          <input id="url" type="url" inputmode="url" placeholder="https://www.instagram.com/p/..." required aria-label="Link do post do Instagram">
+          <button type="button" class="paste" id="paste">Colar</button>
+        </div>
+        <button class="btn" id="submit" type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          Buscar
+        </button>
+      </form>
+
+      <div id="status" class="status" hidden></div>
+
+      <section class="result" id="result" hidden>
+        <div class="result-head">
+          <div>
+            <h2 id="title"></h2>
+            <small id="subtitle"></small>
+          </div>
+          <button class="btn" id="all" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16"/></svg>
+            <span id="all-label">Baixar tudo</span>
+          </button>
+        </div>
+        <div class="grid" id="grid"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      © <span id="year"></span> Target Mídia Digital · Funciona apenas com posts públicos.
+    </div>
+  </footer>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const form = $('form'), input = $('url'), statusEl = $('status'), result = $('result'), grid = $('grid');
+    const DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16"/></svg>';
+    let current = null;
+
+    $('year').textContent = new Date().getFullYear();
+
+    const mediaUrl = (url) => '/api/media?url=' + encodeURIComponent(url);
+    const downloadUrl = (item) => mediaUrl(item.url) + '&dl=1&name=' + encodeURIComponent(item.filename);
+
+    function showStatus(html, isError) {
+      statusEl.innerHTML = html;
+      statusEl.className = 'status' + (isError ? ' error' : '');
+      statusEl.hidden = false;
+    }
+
+    function triggerDownload(item) {
+      const a = document.createElement('a');
+      a.href = downloadUrl(item);
+      a.download = item.filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    function render(post) {
+      current = post;
+      const n = post.items.length;
+      const kind = n > 1 ? 'Carrossel' : post.items[0].type === 'video' ? 'Vídeo' : 'Imagem';
+      $('title').textContent = post.username ? '@' + post.username : 'Post ' + post.shortcode;
+      $('subtitle').textContent = kind + ' · ' + n + (n > 1 ? ' arquivos' : ' arquivo');
+      $('all-label').textContent = 'Baixar todos (' + n + ')';
+      $('all').hidden = n === 1;
+
+      grid.innerHTML = '';
+      grid.classList.toggle('single', n === 1);
+      post.items.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'item';
+        const media = document.createElement('div');
+        media.className = 'media';
+        if (item.type === 'video') {
+          const v = document.createElement('video');
+          v.controls = true;
+          v.preload = 'none';
+          v.playsInline = true;
+          if (item.thumb) v.poster = mediaUrl(item.thumb);
+          v.src = mediaUrl(item.url);
+          media.appendChild(v);
+        } else {
+          const img = document.createElement('img');
+          img.loading = 'lazy';
+          img.alt = 'Imagem ' + (i + 1);
+          img.src = mediaUrl(item.thumb || item.url);
+          media.appendChild(img);
+        }
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = (item.type === 'video' ? 'VÍDEO' : 'FOTO') + (n > 1 ? ' ' + (i + 1) + '/' + n : '');
+        media.appendChild(badge);
+
+        const btn = document.createElement('a');
+        btn.className = 'btn';
+        btn.href = downloadUrl(item);
+        btn.download = item.filename;
+        btn.innerHTML = DOWNLOAD_ICON + 'Baixar';
+
+        card.append(media, btn);
+        grid.appendChild(card);
+      });
+      result.hidden = false;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = input.value.trim();
+      if (!url) return;
+      $('submit').disabled = true;
+      result.hidden = true;
+      showStatus('<span class="spinner"></span>Buscando post...');
+      try {
+        const res = await fetch('/api/post?url=' + encodeURIComponent(url));
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erro ao buscar o post.');
+        statusEl.hidden = true;
+        render(data);
+      } catch (err) {
+        showStatus(err.message || 'Erro ao buscar o post.', true);
+      } finally {
+        $('submit').disabled = false;
+      }
+    });
+
+    // Baixa em sequência; o navegador pode pedir permissão para múltiplos downloads.
+    $('all').addEventListener('click', async () => {
+      if (!current) return;
+      for (const item of current.items) {
+        triggerDownload(item);
+        await new Promise((r) => setTimeout(r, 700));
+      }
+    });
+
+    // Permite abrir o site já com um link: /?url=https://www.instagram.com/p/...
+    const preset = new URLSearchParams(location.search).get('url');
+    if (preset) {
+      input.value = preset;
+      form.requestSubmit();
+    }
+
+    $('paste').addEventListener('click', async () => {
+      try {
+        input.value = (await navigator.clipboard.readText()).trim();
+        input.focus();
+      } catch {
+        input.focus();
+      }
+    });
+  </script>
+</body>
+</html>
